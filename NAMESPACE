@@ -1,0 +1,5 @@
+import(methods,graphics)
+exportClasses('aGFF','aGFFCalc')
+exportMethods('show','print','plot')
+export(do.aGFF.calc,findRegions,read.resultsGFF,findClosestGene,write.sgr,getRefflat)
+useDynLib(ACME)

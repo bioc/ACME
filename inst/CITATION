@@ -1,0 +1,14 @@
+citHeader("Please cite the following if utilizing the ACME software: ")
+citEntry(entry="article",
+  author = "Peter C Scacheri and Gregory E Crawford and Sean Davis",
+  title = "Statistics for ChIP-chip and DNase hypersensitivity experiments on NimbleGen arrays.",
+  journal = "Methods Enzymol",
+  year = 2006,
+  volume = 411,
+  pages = "270--282",
+  textVersion=
+    paste("Scacheri, P. C.; Crawford, G. E. & Davis, S.",
+          "Statistics for ChIP-chip and DNase hypersensitivity experiments on
+	  NimbleGen arrays.", 
+          "Methods Enzymol, 2006, 411, 270-282",sep="\n")
+)
