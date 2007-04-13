@@ -70,7 +70,7 @@ SEXP windowChisq(SEXP locations,SEXP values,SEXP windowSize, SEXP totprobes, SEX
       xsums[i] += xvalues[j];
     }
     // compute chi_square VALUE, not p-value
-    xchivals[i] = chi_square_calc(xposprobes[0],xtotprobes[0],xsums[i],xnprobes[i]);
+    xchivals[i] = chi_square_calc(xposprobes[0],xtotprobes[0]-xposprobes[0],xsums[i],xnprobes[i]-xsums[i]);
   }
   PROTECT(list = allocVector(VECSXP,4));
   SET_VECTOR_ELT(list, 0, sums);
