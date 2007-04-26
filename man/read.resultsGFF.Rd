@@ -8,12 +8,13 @@
   experiment and creates a resulting aGFF-class object.
 }
 \usage{
-read.resultsGFF(fnames, path = ".", samples = NULL, notes = NULL, skip = 0, sep = "\t", quote = "\"", ...)
+read.resultsGFF(fnames, path = NULL, samples = NULL, notes = NULL, skip = 0, sep = "\t", quote = "\"", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{fnames}{A vector of filenames}
-  \item{path}{The path to the filenames}
+  \item{path}{The path to the filenames or \code{NULL} for relative to
+    the local directory}
   \item{samples}{A data.frame containing sample information, one row per
     sample, in the same order as the files in fnames}
   \item{notes}{A character vector for notes--not currently stored}

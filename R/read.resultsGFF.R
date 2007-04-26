@@ -1,5 +1,5 @@
 "read.resultsGFF" <-
-  function (fnames, path = ".", samples = NULL, notes = NULL, skip = 0, 
+  function (fnames, path = NULL, samples = NULL, notes = NULL, skip = 0, 
             sep = "\t", quote = "\"", ...) 
 {
   if (is.null(path)) 
@@ -21,9 +21,9 @@
     Score <- cbind(Score, as.numeric(tmp[, 6]))
   }
   fnames <- gsub(".gff", "", fnames)
-  colnames(Score) <- fnames
   ord <- order(Annotation$Chromosome, Annotation$Location)
   Score <- as.matrix(Score[ord,])
+  colnames(Score) <- fnames
   ret <- new("aGFF", annotation = Annotation[ord, ],
              data = Score, samples = data.frame(samples))
   return(ret)

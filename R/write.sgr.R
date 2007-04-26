@@ -2,9 +2,7 @@ write.sgr <- function(agff,raw=TRUE,vals=TRUE,directory='.') {
   if (!(class(agff) %in% c('aGFF','aGFFCalc'))) {
     stop('Need agff to be an aGFF or aGFFCalc object')
   }
-  sampnames <- ifelse(is.null(colnames(agff@data)),
-                      paste('sample',1:ncol(agff@data)),
-                      colnames(agff@data))
+  sampnames <- colnames(agff@data)
   for(i in 1:ncol(agff@data)) {
     if (class(agff)=='aGFFCalc'){
       if(vals) {
