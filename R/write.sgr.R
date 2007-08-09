@@ -1,23 +1,29 @@
-write.sgr <- function(agff,raw=TRUE,vals=TRUE,directory='.') {
-  if (!(class(agff) %in% c('aGFF','aGFFCalc'))) {
-    stop('Need agff to be an aGFF or aGFFCalc object')
+write.sgr <- function(agff,raw=TRUE,vals=TRUE,directory=NULL) {
+  if (!(class(agff) %in% c('ACME','ACMECalc'))) {
+    stop('ACME or derived class object. Got an object of class: ',class(agff))
   }
-  sampnames <- ifelse(is.null(colnames(agff@data)),
-                      paste('sample',1:ncol(agff@data)),
-                      colnames(agff@data))
-  for(i in 1:ncol(agff@data)) {
-    if (class(agff)=='aGFFCalc'){
+  sampnames <- sampleNames(agff)
+  for(i in 1:ncol(agff)) {
+    if (class(agff)=='ACMECalc'){
       if(vals) {
-        filename <- file.path(directory,sprintf("%s_thresh%3.2f.sgr",sampnames[i],agff@threshold))
+        if(!is.null(directory)) {
+          filename <- file.path(directory,sprintf("%s_thresh%3.2f.sgr",sampnames[i],threshold(agff)))
+        } else {
+          filename <- sprintf("%s_thresh%3.2f.sgr",sampnames[i],threshold(agff))
+        }
         cat(filename,"\n")
-        write.table(data.frame(agff@annotation[,c('Chromosome','Location')],-log10(agff@vals[,i]+min(agff@vals[agff@vals[,i]>0,i]))),file=filename,
+        write.table(data.frame(Chromosome(agff),Position(agff),-log10(pvals(agff)[,i]+min(pvals(agff)[pvals(agff)[,i]>0,i]))),file=filename,
                     sep="\t",col.names=FALSE,row.names=FALSE,quote=FALSE)
       }
     }
     if(raw) {
-      filename <- file.path(directory,sprintf("%s_raw.sgr",sampnames[i]))
+      if(!is.null(directory)) {
+        filename <- file.path(directory,sprintf("%s_raw.sgr",sampnames[i]))
+      } else {
+        filename <- sprintf("%s_raw.sgr",sampnames[i])
+      }
       cat(filename,"\n")
-      write.table(data.frame(agff@annotation[,c('Chromosome','Location')],agff@data[,i]),file=filename,
+      write.table(data.frame(Chromosome(agff),Position(agff),exprs(agff)[,i]),file=filename,
                   sep="\t",col.names=FALSE,row.names=FALSE,quote=FALSE)
     }
   }

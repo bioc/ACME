@@ -1,0 +1,6 @@
+setGeneric("QCData",    function(object) standardGeneric("QCData"))
+setGeneric("threshold", function(object) standardGeneric("threshold"))
+setGeneric("windowsize",function(object) standardGeneric("windowsize"))
+setGeneric("Position",  function(object) standardGeneric("Position"))
+setGeneric("Chromosome",function(object) standardGeneric("Chromosome"))
+setGeneric("pvals",     function(object) standardGeneric("pvals"))

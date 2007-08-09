@@ -1,22 +1,24 @@
 "do.aGFF.calc" <-
 function (x, window, thresh) 
 {
-    chroms <- unique(as.character(x@annotation$Chromosome))
-    nsamps <- dim(x@data)[2]
-    ngenes <- dim(x@data)[1]
-    y <- x@data
+    chroms <- unique(as.character(Chromosome(x)))
+    chroms <- chroms[!is.na(chroms)]
+    nsamps <- dim(x)[2]
+    ngenes <- dim(x)[1]
+    y <- matrix(NA,nr=nrow(exprs(x)),nc=ncol(exprs(x)))
     cutpoints <- vector()
     for (i in 1:nsamps) {
       writeLines(paste("Working on sample", i))
-      cutpoints[i] <- quantile(x@data[, i], probs = thresh)
-      vals <- x@data[,i]>cutpoints[i]
+      cutpoints[i] <- quantile(exprs(x)[,i], probs = thresh)
+      vals <- exprs(x)[,i]>cutpoints[i]
       vals[vals==TRUE] <- 1
       vals[vals==FALSE] <- 0
       positive.count <- sum(vals)
       for (j in chroms) {
         writeLines(paste("Working on chromosome", j))
-        sub <- x@annotation$Chromosome == j
-        z <- windowChisq(x@annotation$Location[sub],
+        sub <- Chromosome(x) == j
+        sub[is.na(sub)] <- FALSE
+        z <- windowChisq(Position(x)[sub],
                          vals[sub],
                          window,
                          length(vals),
@@ -24,11 +26,11 @@ function (x, window, thresh)
         y[sub, i] <- z$p.vals;
       }
     }
-    colnames(y) <- colnames(x@data)
-    names(cutpoints) <- colnames(x@data)
-    ret <- new("aGFFCalc", vals = y, threshold = thresh, cutpoints = cutpoints, 
-               data = x@data, annotation = x@annotation, samples = x@samples, 
-               call = match.call())
+    colnames(y) <- sampleNames(x)
+    names(cutpoints) <- sampleNames(x)
+    browser()
+    ret <- new("ACMECalc", featureData=featureData(x), phenoData=phenoData(x),pvals=y,exprs=exprs(x),
+               threshold = thresh, windowsize=window)
     return(ret)
   }
 
