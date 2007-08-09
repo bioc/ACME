@@ -18,8 +18,6 @@ setMethod("initialize","ACME",
             if (missing(assayData)) {
               if (missing(phenoData))
                 phenoData <- annotatedDataFrameFrom(exprs, byrow=FALSE)
-              if (missing(featureData))
-                featureData <- annotatedDataFrameFrom(exprs, byrow=TRUE)
               .Object <- callNextMethod(.Object,
                              phenoData=phenoData,
                              featureData=featureData,
@@ -67,7 +65,6 @@ setMethod("initialize","ACMECalc",
                    ...) {
             .Object@windowsize <- as.integer(windowsize)
             .Object@threshold <- as.numeric(threshold)
-            browser()
             if (missing(featureData)) {
               if (missing(Chromosome) || missing(Position)) {
                 stop("One of featureData or Chromosome and Position must be specified")
@@ -149,6 +146,14 @@ setMethod("Chromosome","ACME",function(object) {
   return(pData(featureData(object))$Chromosome)
 })
 
+setMethod("Position","ACMECalc",function(object) {
+  return(pData(featureData(object))$Position)
+})
+
+setMethod("Chromosome","ACMECalc",function(object) {
+  return(pData(featureData(object))$Chromosome)
+})
+
 setMethod("exprs","ACME",function(object) {
   return(assayData(object)$exprs)
 })
@@ -174,3 +179,31 @@ setMethod("combine",c("ACMECalc","ACMECalc"),function(x,y,...) {
   }
 })
 
+plotgffcalc <- function(x,y='missing',chrom,samples=NULL,...) {
+  nsamps <- 0
+  if (is.null(samples)) {
+    samples <- 1:ncol(x)
+    nsamps <- length(samples)
+  }
+  if (!is.numeric(samples))
+    samples <- which(sampleNames(x) %in% samples)
+  sub <- Chromosome(x)==chrom
+  sub[is.na(sub)] <- FALSE
+  if (sum(sub)==0)
+    stop('No matching chromosome in the data')
+  if (nsamps>1) par(ask=T)
+  par(mar=c(4,5,4,5))
+  for (i in samples) {
+    plot(Position(x)[sub],exprs(x)[sub,i],
+         axes=F,col='gray85',pch=20,xlab="",ylab="",main="",...)
+    axis(side=4)
+    abline(h=0,col='gray85')
+    abline(h=quantile(exprs(x)[,i],threshold(x)),col='gray85',lty=2)
+    par(new=T)
+    plot(Position(x)[sub],-log10(pvals(x)[sub,i]),
+         main=paste('Chromosome:',chrom,', Sample:',sampleNames(x)[i]),
+         ylab='-log10(p-value)',xlab='Chromosome Position',type='b',pch=20,
+         col='red',...)
+  }
+  par(ask=F)
+}

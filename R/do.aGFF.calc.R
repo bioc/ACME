@@ -28,7 +28,6 @@ function (x, window, thresh)
     }
     colnames(y) <- sampleNames(x)
     names(cutpoints) <- sampleNames(x)
-    browser()
     ret <- new("ACMECalc", featureData=featureData(x), phenoData=phenoData(x),pvals=y,exprs=exprs(x),
                threshold = thresh, windowsize=window)
     return(ret)

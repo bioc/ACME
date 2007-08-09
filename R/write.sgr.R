@@ -3,6 +3,8 @@ write.sgr <- function(agff,raw=TRUE,vals=TRUE,directory=NULL) {
     stop('ACME or derived class object. Got an object of class: ',class(agff))
   }
   sampnames <- sampleNames(agff)
+  sub1 <- (!is.na(Chromosome(agff))) & (!is.na(Position(agff)))
+  agff <- agff[sub1,]
   for(i in 1:ncol(agff)) {
     if (class(agff)=='ACMECalc'){
       if(vals) {
