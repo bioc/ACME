@@ -4,5 +4,7 @@ setClass("ACME",
 setClass("ACMECalc",
          representation(windowsize="integer",
                         threshold="numeric"),
-         contains="ExpressionSet")
+         prototype=list(windowsize=integer(),
+           threshold=numeric()),
+         contains="ACME")
 
