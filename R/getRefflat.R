@@ -4,7 +4,8 @@
     download.file(paste('http://hgdownload.cse.ucsc.edu/goldenPath/',
                         genome,'/database/refFlat.txt.gz',sep=""),
                   tmpfile,mode='wb')
-    rf <- read.delim(gzfile(tmpfile),header=FALSE,sep="\t")
+    rf <- read.delim(conn <- gzfile(tmpfile, open="rt"),header=FALSE,sep="\t")
+    close(conn)
     colnames(rf) <- c('geneName','name','chrom','strand','txStart','txEnd',
                       'cdsStart','cdsEnd','exonCount','exonStarts','exonEnds')
     txEndNeg <- rf$txStart
