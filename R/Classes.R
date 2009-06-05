@@ -68,7 +68,6 @@ setMethod("initialize", "ACMECalcSet",
 setValidity("ACMECalcSet", function(object) {
   msg <- NULL
   msg <- validMsg(msg, assayDataValidMembers(assayData(object), c("exprs","vals")))
-  browser()
   msg <- validMsg(msg, if(length(object@cutpoints)!=ncol(object))
                   return(c("cutpoints should be same length as number of samples")) else TRUE)
   msg <- validMsg(msg, if(length(object@threshold)!=1) return(c("threshold should be a single number"))
