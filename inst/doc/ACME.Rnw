@@ -40,38 +40,34 @@ library(ACME)
 
 This loads the ACME library.
 
-Now, we will generate three chromosomes of random data, with probe spacing at 100 base pairs, on three samples.
+To illustrate the package, we begin by loading some example data from two nimblegen arrays.  The arrays were custom-designed to assay HOX genes in a ChIP-chip experiment.
 
 <<>>=
-# Generate some random data
-# 3 samples, 3 chromosomes
-samps <- data.frame(SampleID=1:3,Sample=paste('Sample',1:3))
-dat <- matrix(rnorm(90000),nc=3)
-colnames(dat) <- 1:3 # we will use these to unambiguously name the samples
-pos <- rep(seq(1,10000*100,100),3)
-chrom <- rep(paste('chr',1:3,sep=""),each=10000)
-annot <- data.frame(Chromosome=chrom,Location=pos)
-a <- new('aGFF',data=dat,annotation=annot,samples=samps)
+datdir <- system.file('extdata',package='ACME')
+fnames <- dir(datdir)
+example.agff <- read.resultsGFF(fnames,path=datdir)
+example.agff
 @ 
 
-Now, \Robject{a} is an R data structure (of class \Rclass{aGFF}) that contains the data from two test GFF files.
+Now, \Robject{a} is an R data structure (of class \Rclass{ACMESet}) that contains the data from two test GFF files.
 
 <<>>=
 calc <- do.aGFF.calc(a,window=1000,thresh=0.95)
 @ 
 
-The function do.aGFF.calc takes as input an aGFF object, a window size (usually 2-3 times the expected fragment size from the experiment and large enough to include about 10 probes, at least), and a threshold, which will be used to determine which probes are counted as positive in the chi-square test.
+The function do.aGFF.calc takes as input an \Rclass{ACMESet} object, a window size (usually 2-3 times the expected fragment size from the experiment and large enough to include about 10 probes, at least), and a threshold which will be used to determine which probes are counted as positive in the chi-square test.
 
 If desired, the results can be plotted in an R graphics window. The raw signal intensities of each oligonucleotide (Chip/total genomic DNA) will be displayed as grey points; corresponding P values will be displayed in red. The dotted horizontal line represents the threshold as defined in the call to \Rfunction{do.aGFF.calc}.  In the following example, R plots the results from an arbitrarily chosen region on chromosome 1, genome coordinates 10,000-50,000.
 
 <<fig=TRUE>>=
-plot(calc,chrom='chr1',sample=1,xlim=c(10000,50000))
+plot(calc,chrom='chr1',sample=1)
 @ 
 
-One can obtain an overview of an aGFF object by typing the variable name like so:
+And one can find significant regions of interest using:
 
 <<>>=
-a
+regs <- findRegions(calc)
+regs[1:5,]
 @ 
 
 \subsection{Generating files for the Affymetrix Integrated Genome Browser}

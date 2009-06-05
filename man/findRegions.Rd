@@ -8,10 +8,10 @@
   threshold.
 }
 \usage{
-findRegions(calcobj, thresh = 1e-04)
+findRegions(x, thresh = 1e-04)
 }
 \arguments{
-  \item{calcobj}{An \code{aGFFCalc} object}
+  \item{x}{An \code{ACMESetCalc} object}
   \item{thresh}{The p-value threshold}
 }
 \details{

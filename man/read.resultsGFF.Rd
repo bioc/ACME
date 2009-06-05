@@ -24,14 +24,14 @@ read.resultsGFF(fnames, path = ".", samples = NULL, notes = NULL, skip = 0, sep 
   \item{\dots}{...}
 }
 \details{
-  The output is an aGFF object.
+  The output is an ACMESet object.
 }
 \value{
-  A single aGFF object.
+  A single ACMESet object.
 }
 \references{http://www.sanger.ac.uk/Software/formats/GFF/}
 \author{Sean Davis <sdavis2@mail.nih.gov>}
-\seealso{\code{\link{aGFF-class}}}
+\seealso{\code{\linkS4class{ACMESet}}}
 \examples{
 datdir <- system.file('extdata',package='ACME')
 fnames <- dir(datdir)

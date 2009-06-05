@@ -1,9 +1,9 @@
 \name{example.agff}
 \alias{example.agff}
 \docType{data}
-\title{An example ACME data structure of class aGFF}
+\title{An example ACME data structure of class ACMESet}
 \description{
-  An aGFF data structure from two Nimblegen arrays, custom tiled to
+  An ACMESet data structure from two Nimblegen arrays, custom tiled to
   include multiple HOX genes.
 }
 \usage{data(example.agff)}

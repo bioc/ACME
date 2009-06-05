@@ -3,7 +3,7 @@
     if (!exists('refflat')) {
       refflat <<- list()
       refflat[[genome]] <<- getRefflat(genome)
-    } else if (!match(genome,names(refflat))) {
+    } else if (!(genome %in% names(refflat))) {
       refflat[[genome]] <<- getRefflat(genome)
     }
     rf <- refflat[[genome]]

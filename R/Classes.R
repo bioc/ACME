@@ -1,3 +1,187 @@
+### The ACMESet class is a simple container
+### that must have at least the columns
+### chromosome, start, and end (with those names)
+### in the fData.
+setClass('ACMESet',
+         contains="ExpressionSet",
+         validity=function(object) {
+           msg <- NULL
+           cnames <- colnames(fData(object))
+           chk <- match(c('chromosome','start','end'),cnames)
+           if(any(is.na(chk)) & nrow(fData(object))>0) {
+             msg <- "Column names of featuredata must include 'chromosome','start', and 'end'"
+           }
+           if(is.null(msg)) return(TRUE)
+           return(msg)
+         })
+setClass('ACMECalcSet',
+         representation(cutpoints="numeric",
+                        threshold="numeric"),
+         contains='ACMESet',
+         validity=function(object) {
+           msg <- NULL
+           if(length(object@cutpoints)!=ncol(object)) {
+             msg <- "cutpoints should be the same length as the number of samples"
+           }
+           if(!is.null(msg)) return(msg)
+           return(TRUE)
+         })
+setMethod("initialize", "ACMECalcSet",
+          function(.Object,
+                   assayData,
+                   phenoData = annotatedDataFrameFrom(assayData, byrow=FALSE),
+                   featureData = annotatedDataFrameFrom(assayData, byrow=TRUE),
+                   experimentData = new("MIAME"),
+                   annotation = character(),
+                   cutpoints=numeric(),
+                   threshold=numeric(),
+                   exprs = new("matrix"),
+                   vals = new("matrix"),
+                   ... ) {
+            .Object@cutpoints <- cutpoints
+            .Object@threshold <- threshold
+            if (missing(assayData)) {
+              if (missing(phenoData))
+                phenoData <- annotatedDataFrameFrom(exprs, byrow=FALSE)
+              if (missing(featureData))
+                featureData <- annotatedDataFrameFrom(exprs, byrow=TRUE)
+              .Object <- callNextMethod(.Object,
+                                        phenoData=phenoData,
+                                        featureData=featureData,
+                                        experimentData=experimentData,
+                                        annotation=annotation,
+                                        exprs=exprs,
+                                        vals=vals,
+                                        ...)
+            } else if(missing(exprs) & missing(vals)) {
+              .Object <- callNextMethod(.Object,
+                                        assayData = assayData,
+                                        phenoData = phenoData,
+                                        featureData = featureData,
+                                        experimentData = experimentData,
+                                        annotation = annotation,
+                                        ...)
+            } else stop("provide at most one of 'assayData' or c('exprs','vals') to initialize ACMECalcSet",
+                        call.=FALSE)
+            return(.Object)
+          })
+setValidity("ACMECalcSet", function(object) {
+  msg <- NULL
+  msg <- validMsg(msg, assayDataValidMembers(assayData(object), c("exprs","vals")))
+  browser()
+  msg <- validMsg(msg, if(length(object@cutpoints)!=ncol(object))
+                  return(c("cutpoints should be same length as number of samples")) else TRUE)
+  msg <- validMsg(msg, if(length(object@threshold)!=1) return(c("threshold should be a single number"))
+                  else return(TRUE)
+                )
+  if (is.null(msg)) TRUE else msg
+})
+
+### Chromosome
+if(!isGeneric("chromosome")) {
+  setGeneric("chromosome",function(object,...) standardGeneric("chromosome"))
+}
+setMethod("chromosome",c(object="ACMESet"),function(object,...) {
+  return(fData(object)$chromosome)
+})
+### Start
+if(!isGeneric("start")) {
+  setGeneric("start",function(x,...) standardGeneric("start"))
+}
+setMethod("start",c(x="ACMESet"),function(x,...) {
+  return(fData(x)$start)
+})
+### End
+if(!isGeneric("end")) {
+  setGeneric("end",function(x,...) standardGeneric("end"))
+}
+setMethod("end",c(x="ACMESet"),function(x,...) {
+  return(fData(x)$end)
+})
+### cutpoints
+if(!isGeneric("cutpoints")) {
+  setGeneric("cutpoints",function(x,...) standardGeneric("cutpoints"))
+}
+setMethod("cutpoints",c(x="ACMECalcSet"),function(x,...) {
+  return(x@cutpoints)
+})
+### threshold
+if(!isGeneric("threshold")) {
+  setGeneric("threshold",function(x,...) standardGeneric("threshold"))
+}
+setMethod("threshold",c(x="ACMECalcSet"),function(x,...) {
+  return(x@threshold)
+})
+### vals
+if(!isGeneric("vals")) {
+  setGeneric("vals",function(x,...) standardGeneric("vals"))
+}
+setMethod("vals",c(x="ACMECalcSet"),function(x,...) {
+  return(assayDataElement(x,'vals'))
+})
+
+### show for ACMECalcSet
+setMethod("show","ACMECalcSet",
+          function(object) {
+            callNextMethod(object)
+            cat(paste("Threshold:",threshold(object),"\n"))
+          })
+
+### Plotting
+## ACMESet
+if(!isGeneric("plot")) {
+  setGeneric("plot",function(x,y,...) standardGeneric("plot"))
+}
+.plotACMESet <- function(x,y='missing',chrom,samples=NULL,...) {
+  nsamps <- 0
+  if (is.null(samples)) {
+    samples <- 1:ncol(x)
+    nsamps <- length(samples)
+  }
+  if (!is.numeric(samples))
+    samples <- which(sampleNames(x) %in% samples)
+  sub <- chromosome(x)==chrom
+  if (sum(sub)==0)
+    stop('No matching chromosome in the data')
+  if (nsamps>1 & interactive()) par(ask=TRUE)
+  for (i in samples)
+    plot(start(x)[sub],exprs(x)[sub,i],...,
+         main=paste('Chromosome:',chrom,', Sample:',sampleNames(x)[i]),
+         ylab='Data',xlab='Chromosome Position')
+  par(ask=FALSE)
+}
+setMethod("plot","ACMESet",.plotACMESet)
+## ACMECalcSet
+.plotACMECalcSet <- function(x,y='missing',chrom,samples=NULL,...) {
+  nsamps <- 0
+  if (is.null(samples)) {
+    samples <- 1:ncol(x)
+    nsamps <- length(samples)
+  }
+  if (!is.numeric(samples))
+    samples <- which(sampleNames(x) %in% samples)
+  sub <- chromosome(x)==chrom
+  if (sum(sub)==0)
+    stop('No matching chromosome in the data')
+  if (nsamps>1 & interactive()) par(ask=TRUE)
+  par(mar=c(4,5,4,5))
+  for (i in samples) {
+    plot(start(x)[sub],exprs(x)[sub,i],
+         axes=F,col='gray85',pch=20,xlab="",ylab="",main="",...)
+    axis(side=4)
+    abline(h=0,col='gray85')
+    abline(h=cutpoints(x)[i],col='gray85',lty=2)
+    par(new=T)
+    plot(start(x)[sub],-log10(vals(x)[sub,i]),
+         main=paste('Chromosome:',chrom,', Sample:',sampleNames(x)[i]),
+         ylab='-log10(p-value)',xlab='Chromosome Position',type='b',pch=20,
+         col='red',...)
+  }
+  par(ask=FALSE)
+}
+setMethod("plot","ACMECalcSet",.plotACMECalcSet)
+
+
 setClass('aGFF',
          representation(annotation='data.frame',
                         data='matrix',

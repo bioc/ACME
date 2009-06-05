@@ -1,36 +1,39 @@
 "do.aGFF.calc" <-
 function (x, window, thresh) 
 {
-    chroms <- unique(as.character(x@annotation$Chromosome))
-    nsamps <- dim(x@data)[2]
-    ngenes <- dim(x@data)[1]
-    y <- x@data
-    cutpoints <- vector()
-    for (i in 1:nsamps) {
-      writeLines(paste("Working on sample", i))
-      cutpoints[i] <- quantile(x@data[, i], probs = thresh)
-      vals <- x@data[,i]>cutpoints[i]
-      vals[vals==TRUE] <- 1
-      vals[vals==FALSE] <- 0
-      positive.count <- sum(vals)
-      for (j in chroms) {
-        writeLines(paste("Working on chromosome", j))
-        sub <- x@annotation$Chromosome == j
-        z <- windowChisq(x@annotation$Location[sub],
-                         vals[sub],
-                         window,
-                         length(vals),
-                         positive.count)
-        y[sub, i] <- z$p.vals;
-      }
+  chroms <- unique(chromosome(x))
+  nsamps <- ncol(x)
+  ngenes <- nrow(x)
+  y <- matrix(NA,ncol=nsamps,nrow=ngenes)
+  cutpoints <- vector()
+  for (i in 1:nsamps) {
+    writeLines(paste("Working on sample", i))
+    cutpoints[i] <- quantile(exprs(x)[, i], probs = thresh, na.rm=TRUE)
+    vals <- exprs(x)[,i]>cutpoints[i]
+    ## Convert TRUE/FALSE to numeric
+    vals <- as.numeric(vals)
+    vals[vals==TRUE] <- 1
+    vals[vals==FALSE] <- 0
+    positive.count <- sum(vals)
+    writeLines("Working on chromosome: ")
+    for (j in chroms) {
+      cat(j," ")
+      sub <- chromosome(x) == j
+      z <- windowChisq(start(x)[sub],
+                       vals[sub],
+                       window,
+                       length(vals),
+                       positive.count)
+      y[sub, i] <- z$p.vals;
     }
-    colnames(y) <- colnames(x@data)
-    names(cutpoints) <- colnames(x@data)
-    ret <- new("aGFFCalc", vals = y, threshold = thresh, cutpoints = cutpoints, 
-               data = x@data, annotation = x@annotation, samples = x@samples, 
-               call = match.call())
-    return(ret)
   }
+  colnames(y) <- sampleNames(x)
+  names(cutpoints) <- sampleNames(x)
+  ret <- new("ACMECalcSet",phenoData=phenoData(x),featureData=featureData(x),
+             experimentData=experimentData(x),annotation=annotation(x),
+             threshold=thresh,cutpoints=cutpoints,exprs=exprs(x),vals=y)
+  return(ret)
+}
 
 windowChisq <- function(locations,ratios,windowsize,totprobes,posprobes) {
   ret <- .Call('windowChisq',locations,ratios,windowsize,totprobes,posprobes,PACKAGE='ACME')
