@@ -52,7 +52,7 @@ example.agff
 Now, \Robject{a} is an R data structure (of class \Rclass{ACMESet}) that contains the data from two test GFF files.
 
 <<>>=
-calc <- do.aGFF.calc(a,window=1000,thresh=0.95)
+calc <- do.aGFF.calc(example.agff,window=1000,thresh=0.95)
 @ 
 
 The function do.aGFF.calc takes as input an \Rclass{ACMESet} object, a window size (usually 2-3 times the expected fragment size from the experiment and large enough to include about 10 probes, at least), and a threshold which will be used to determine which probes are counted as positive in the chi-square test.
