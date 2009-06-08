@@ -3,15 +3,9 @@
 
 #Imports: Biobase, graphics, methods, stats, utils
 import(Biobase)
-
-importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, MIAME,
-                  Versions, ExpressionSet, eSet, Versioned, VersionedBiobase)
-
-importMethodsFrom(Biobase, annotatedDataFrameFrom, annotation,
-                  experimentData, exprs, fData, featureData, phenoData,
-                  sampleNames, "sampleNames<-")
-
-importFrom(Biobase, assayDataElement, validMsg)
+importFrom(graphics,plot)
+import(methods)
+importFrom(stats,start,end)
 
 exportClasses('aGFF','aGFFCalc','ACMESet','ACMECalcSet')
 exportMethods('show','print','plot','vals','threshold','cutpoints',
