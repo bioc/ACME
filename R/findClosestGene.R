@@ -1,8 +1,9 @@
 "findClosestGene" <-
   function(chrom,pos,genome="hg17",position='txStart') {
     if (!exists('refflat')) {
-      refflat <<- list()
-      refflat[[genome]] <<- getRefflat(genome)
+      reftmp <- list()
+      reftmp[[genome]] <- getRefflat(genome)
+      assign('refflat',reftmp,.GlobalEnv)
     } else if (!(genome %in% names(refflat))) {
       refflat[[genome]] <<- getRefflat(genome)
     }
