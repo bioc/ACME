@@ -1,13 +1,12 @@
 Package: ACME
-Version: 2.1.4
-Date: 2009-06-11
+Version: 2.1.5
+Date: 2009-06-17
 Title: Algorithms for Calculating Microarray Enrichment (ACME)
 Author: Sean Davis <sdavis2@mail.nih.gov>
 Maintainer: Sean Davis <sdavis2@mail.nih.gov>
-Depends: R,Biobase,methods
-Imports: graphics,stats
+Depends: Biobase (>= 2.5.3), methods
+Imports: graphics, stats
 Description: ACME (Algorithms for Calculating Microarray Enrichment) is a set of tools for analysing tiling array ChIP/chip, DNAse hypersensitivity, or other experiments that result in regions of the genome showing "enrichment".  It does not rely on a specific array technology (although the array should be a "tiling" array), is very general (can be applied in experiments resulting in regions of enrichment), and is very insensitive to array noise or normalization methods.  It is also very fast and can be applied on whole-genome tiling array experiments quite easily with enough memory.
 License: GPL version 2 or newer
 biocViews: Bioinformatics
 URL: http://watson.nci.nih.gov/~sdavis
-
