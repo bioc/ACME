@@ -11,10 +11,11 @@
   files from the same regions of the genome along with some information
   about the samples from which the data came and the data (from the
   "score" column of the GFF file) themselves.}
+
 \section{Objects from the Class}{Objects can be created by calls of the
-  form \code{new("aGFF", ...).  Also, the \code{read.resultsGFF()}
-    function returns aGFF objects.}.
-}
+  form \code{new("aGFF", ...)}.  Also, the \code{read.resultsGFF()}
+  function returns aGFF objects.}
+
 \section{Slots}{
 	 \describe{
     \item{\code{annotation}:}{Object of class \code{"data.frame"} with
