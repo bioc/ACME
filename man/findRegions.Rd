@@ -31,6 +31,8 @@ findRegions(x, thresh = 1e-04)
   \item{Chromosome}{The Chromosome of the region}
   \item{Start}{The starting basepairof the region}
   \item{End}{The ending basepair of the region}
+  \item{Median}{The median p-value in the region}
+  \item{Mean}{The mean p-value in the region}
 }
 \author{Sean Davis <sdavis2@mail.nih.gov>}
 \seealso{ \code{\link{do.aGFF.calc}}, \code{\link{findClosestGene}} }
