@@ -10,5 +10,6 @@ importFrom(stats,start,end)
 exportClasses('aGFF','aGFFCalc','ACMESet','ACMECalcSet')
 exportMethods('show','print','plot','vals','threshold','cutpoints',
               'chromosome','start','end')
-export(do.aGFF.calc,findRegions,read.resultsGFF,findClosestGene,write.sgr,getRefflat)
+export(do.aGFF.calc,findRegions,read.resultsGFF,findClosestGene,
+       write.bedGraph,write.sgr,getRefflat)
 useDynLib(ACME)

@@ -70,9 +70,9 @@ regs <- findRegions(calc)
 regs[1:5,]
 @ 
 
-\subsection{Generating files for the Affymetrix Integrated Genome Browser}
+\subsection{Generating files for viewing in genome browsers}
 
-The Affymetrix Integrated Genome Browser (IGB) is a very fast, cross-platform (Java-based) genome browser that can display data in many formats.  By generating so-called ``sgr'' files, one can view both the raw data and the calculated p-values in a fully interactive manner.  A simple function, \Rfunction{write.sgr}, will generate such files that can then be loaded into that browser.  The function also serves as a model for how to generate other file formats (such as those needed by the UCSC Genome Browser, another fantastic way to view results).  With minor modifications, other formats can be generated.
+The Affymetrix Integrated Genome Browser (IGB) is a very fast, cross-platform (Java-based) genome browser that can display data in many formats.  By generating so-called ``sgr'' files, one can view both the raw data and the calculated p-values in a fully interactive manner.  A simple function, \Rfunction{write.sgr}, will generate such files that can then be loaded into that browser.  The function also serves as a model for how to generate other file formats.  With minor modifications, other formats can be generated.
 
 <<>>=
 # write both calculated values and raw data
@@ -81,8 +81,12 @@ write.sgr(calc)
 write.sgr(calc,raw=FALSE)
 @ 
 
-The function also serves as a model for how to generate other file formats (such as those needed by the UCSC Genome Browser, another fantastic way to view results).  With minor modifications, other formats can be generated.
+Export to the UCSC genome browser bedGraph format is also supported.
 
+<<>>=
+# or for the UCSC genome browser
+write.bedGraph(calc)
+@ 
 
 
 \end{document}
