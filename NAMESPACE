@@ -6,6 +6,7 @@ import(Biobase)
 importFrom(graphics,plot)
 import(methods)
 importFrom(stats,start,end)
+import(BiocGenerics)
 
 exportClasses('aGFF','aGFFCalc','ACMESet','ACMECalcSet')
 exportMethods('show','print','plot','vals','threshold','cutpoints',

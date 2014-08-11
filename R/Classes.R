@@ -84,16 +84,10 @@ setMethod("chromosome",c(object="ACMESet"),function(object,...) {
   return(fData(object)$chromosome)
 })
 ### Start
-if(!isGeneric("start")) {
-  setGeneric("start",function(x,...) standardGeneric("start"))
-}
 setMethod("start",c(x="ACMESet"),function(x,...) {
   return(fData(x)$start)
 })
 ### End
-if(!isGeneric("end")) {
-  setGeneric("end",function(x,...) standardGeneric("end"))
-}
 setMethod("end",c(x="ACMESet"),function(x,...) {
   return(fData(x)$end)
 })
