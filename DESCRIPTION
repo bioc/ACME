@@ -1,9 +1,8 @@
 Package: ACME
-Version: 2.67.3
+Version: 2.67.4
 Date: 2011-06-15
 Title: Algorithms for Calculating Microarray Enrichment (ACME)
-Author: Sean Davis <sdavis2@mail.nih.gov>
-Maintainer: Sean Davis <sdavis2@mail.nih.gov>
+Authors@R: person("Sean", "Davis", email = "seandavi@gmail.com", role = c("aut", "cre"))
 Depends: R (>= 2.10), Biobase (>= 2.5.5), methods, BiocGenerics
 Imports: graphics, stats, utils
 Description: ACME (Algorithms for Calculating Microarray Enrichment) is
