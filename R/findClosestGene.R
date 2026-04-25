@@ -1,13 +1,9 @@
 "findClosestGene" <-
   function(chrom,pos,genome="hg17",position='txStart') {
-    if (!exists('refflat')) {
-      reftmp <- list()
-      reftmp[[genome]] <- getRefflat(genome)
-      assign('refflat',reftmp,.GlobalEnv)
-    } else if (!(genome %in% names(refflat))) {
-      refflat[[genome]] <<- getRefflat(genome)
+    if (!exists(genome, envir=.acmeCache)) {
+      assign(genome, getRefflat(genome), envir=.acmeCache)
     }
-    rf <- refflat[[genome]]
+    rf <- get(genome, envir=.acmeCache)
     chromsub <- rf$chrom==chrom
     diffdist <- rf[chromsub,position]-pos
     sub <- which(abs(diffdist)==min(abs(diffdist)))

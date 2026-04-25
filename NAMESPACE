@@ -3,9 +3,11 @@
 
 #Imports: Biobase, graphics, methods, stats, utils
 import(Biobase)
-importFrom(graphics,plot)
+importFrom(graphics,plot,par,axis,abline)
 import(methods)
-importFrom(stats,start,end)
+importFrom(stats,start,end,median,pchisq,quantile)
+import(utils)
+importFrom(utils,download.file,read.delim,write.table)
 import(BiocGenerics)
 
 exportClasses('aGFF','aGFFCalc','ACMESet','ACMECalcSet')
