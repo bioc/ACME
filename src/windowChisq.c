@@ -18,7 +18,7 @@ double chi_square_calc( int a, int b, int c, int d ) {
 SEXP windowChisq(SEXP locations,SEXP values,SEXP windowSize, SEXP totprobes, SEXP posprobes)
 {
   int i,j,na,firstprobe,lastprobe;
-  double *xa,*xlocations,*xchivals;
+  double *xlocations,*xchivals;
   int *xwindowSize,*xnprobes,*xtotprobes,*xposprobes,*xvalues,*xsums;
   double halfWindowSize;
   SEXP sums,nprobes,list,chivals;
@@ -54,13 +54,13 @@ SEXP windowChisq(SEXP locations,SEXP values,SEXP windowSize, SEXP totprobes, SEX
     firstprobe=i;
     lastprobe=i;
     // look for leftmost probe in window
-    while((xlocations[i]-xlocations[firstprobe-1] < (halfWindowSize)) &
-	  firstprobe>0) {
+    while(firstprobe > 0 &&
+	  (xlocations[i]-xlocations[firstprobe-1] < (halfWindowSize))) {
       firstprobe += -1;
     }
     // look for rightmost probe in window
-    while((xlocations[lastprobe+1]-xlocations[i] < (halfWindowSize)) &
-	  lastprobe<(na-1)) {
+    while(lastprobe < (na-1) &&
+	  (xlocations[lastprobe+1]-xlocations[i] < (halfWindowSize))) {
       lastprobe += 1;
     }
     xnprobes[i] = lastprobe-firstprobe+1;
@@ -83,7 +83,7 @@ SEXP windowChisq(SEXP locations,SEXP values,SEXP windowSize, SEXP totprobes, SEX
 }
 
 R_CallMethodDef callMethods[] = {
-    {"windowChisq",&windowChisq,5},
+    {"windowChisq", (DL_FUNC) &windowChisq, 5},
     {NULL,NULL,0}
 };
 
