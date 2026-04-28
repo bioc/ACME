@@ -1,5 +1,5 @@
 Package: ACME
-Version: 2.67.5
+Version: 2.68.0
 Date: 2011-06-15
 Title: Algorithms for Calculating Microarray Enrichment (ACME)
 Authors@R: person("Sean", "Davis", email = "seandavi@gmail.com", role = c("aut", "cre"))
